@@ -103,8 +103,9 @@ instance Applicative ((->) t) where
   pure :: a -> ((->) t a)
   pure  a = \_ -> a
     -- error "todo: Course.Applicative pure#((->) t)"
-  (<*>) :: ((->) t (a -> b)) -> ((->) t a) -> ((->) t b)
-  (<*>) x y = \y -> _
+  -- (<*>) :: ((->) t (a -> b)) -> ((->) t a) -> ((->) t b)
+  (<*>) :: (t -> (a -> b)) -> (t -> a) -> (t -> b)
+  (<*>) tab ta t = tab t (ta t)
     -- error "todo: Course.Apply (<*>)#instance ((->) t)"
 
 
@@ -128,13 +129,9 @@ instance Applicative ((->) t) where
 -- >>> lift2 (+) length sum (listh [4,5,6])
 -- 18
 lift2 ::
-  Applicative f =>
-  (a -> b -> c)
-  -> f a
-  -> f b
-  -> f c
-lift2 =
-  error "todo: Course.Applicative#lift2"
+  Applicative f => (a -> b -> c) -> f a -> f b -> f c
+lift2 abc fa fb = _ <*> _
+  -- error "todo: Course.Applicative#lift2"
 
 -- | Apply a ternary function in the environment.
 -- /can be written using `lift2` and `(<*>)`./
