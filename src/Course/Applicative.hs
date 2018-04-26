@@ -130,8 +130,9 @@ instance Applicative ((->) t) where
 -- 18
 lift2 ::
   Applicative f => (a -> b -> c) -> f a -> f b -> f c
-lift2 abc fa fb = _ <*> _
-  -- error "todo: Course.Applicative#lift2"
+lift2 abc fa fb = abc <$> fa <*> fb
+-- lift2 =
+--   error "todo: Course.Applicative#lift2"
 
 -- | Apply a ternary function in the environment.
 -- /can be written using `lift2` and `(<*>)`./
@@ -163,8 +164,9 @@ lift3 ::
   -> f b
   -> f c
   -> f d
-lift3 =
-  error "todo: Course.Applicative#lift3"
+lift3 f fa fb fc = lift2 f fa fb <*> fc
+-- lift3 f fa fb fc = f <$> fa <*> fb <*> fc
+  -- error "todo: Course.Applicative#lift3"
 
 -- | Apply a quaternary function in the environment.
 -- /can be written using `lift3` and `(<*>)`./
@@ -197,16 +199,16 @@ lift4 ::
   -> f c
   -> f d
   -> f e
-lift4 =
-  error "todo: Course.Applicative#lift4"
+lift4 f fa fb fc fd = lift3 f fa fb fc <*> fd
+  -- error "todo: Course.Applicative#lift4"
 
 -- | Apply a nullary function in the environment.
 lift0 ::
   Applicative f =>
   a
   -> f a
-lift0 =
-  error "todo: Course.Applicative#lift0"
+lift0 a = pure a
+  -- error "todo: Course.Applicative#lift0"
 
 -- | Apply a unary function in the environment.
 -- /can be written using `lift0` and `(<*>)`./
@@ -224,8 +226,8 @@ lift1 ::
   (a -> b)
   -> f a
   -> f b
-lift1 =
-  error "todo: Course.Applicative#lift1"
+lift1 f fa = f <$> fa
+  -- error "todo: Course.Applicative#lift1"
 
 -- | Apply, discarding the value of the first argument.
 -- Pronounced, right apply.
@@ -250,8 +252,8 @@ lift1 =
   f a
   -> f b
   -> f b
-(*>) =
-  error "todo: Course.Applicative#(*>)"
+(*>) fa fb = seq <$> fa <*> fb
+  -- error "todo: Course.Applicative#(*>)"
 
 -- | Apply, discarding the value of the second argument.
 -- Pronounced, left apply.
@@ -276,8 +278,8 @@ lift1 =
   f b
   -> f a
   -> f b
-(<*) =
-  error "todo: Course.Applicative#(<*)"
+(<*) fb fa = const <$> fb <*> fa
+  -- error "todo: Course.Applicative#(<*)"
 
 -- | Sequences a list of structures to a structure of list.
 --
