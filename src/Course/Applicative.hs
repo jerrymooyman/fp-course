@@ -298,11 +298,9 @@ lift1 f fa = f <$> fa
 -- >>> sequence ((*10) :. (+2) :. Nil) 6
 -- [60,8]
 sequence ::
-  Applicative f =>
-  List (f a)
-  -> f (List a)
-sequence =
-  error "todo: Course.Applicative#sequence"
+  Applicative f => List (f a) -> f (List a)
+sequence l = foldRight (\fa lfa  -> lift2 (:.) fa lfa) (pure Nil) l
+  -- error "todo: Course.Applicative#sequence"
 
 -- | Replicate an effect a given number of times.
 --
