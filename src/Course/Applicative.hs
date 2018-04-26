@@ -128,6 +128,7 @@ instance Applicative ((->) t) where
 --
 -- >>> lift2 (+) length sum (listh [4,5,6])
 -- 18
+
 lift2 ::
   Applicative f => (a -> b -> c) -> f a -> f b -> f c
 lift2 abc fa fb = abc <$> fa <*> fb
