@@ -276,7 +276,8 @@ find f l = foldRight (\i acc -> if f i then Full i else acc) Empty l
 -- >>> lengthGT4 infinity
 -- True
 lengthGT4 :: List a -> Bool
-lengthGT4 l = length l > 4
+lengthGT4 (_:._:._:._:._) = True
+lengthGT4 _ = False
   -- error "todo: Course.List#lengthGT4"
 
 -- | Reverse a list.
