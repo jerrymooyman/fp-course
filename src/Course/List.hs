@@ -116,9 +116,7 @@ sum = foldLeft (\acc i -> acc + i) 0
 -- 3
 --
 -- prop> \x -> sum (map (const 1) x) == length x
-length ::
-  List a
-  -> Int
+length :: List a -> Int
 length = foldLeft (\acc _ -> acc + 1) 0
 
 -- | Map the given function on each element of the list.
@@ -129,10 +127,7 @@ length = foldLeft (\acc _ -> acc + 1) 0
 -- prop> \x -> headOr x (map (+1) infinity) == 1
 --
 -- prop> \x -> map id x == x
-map ::
-  (a -> b)
-  -> List a
-  -> List b
+map :: (a -> b) -> List a -> List b
 map f l = foldRight (\i acc -> f i:.acc) Nil l
 
 -- | Return elements satisfying the given predicate.
@@ -145,10 +140,7 @@ map f l = foldRight (\i acc -> f i:.acc) Nil l
 -- prop> \x -> filter (const True) x == x
 --
 -- prop> \x -> filter (const False) x == Nil
-filter ::
-  (a -> Bool)
-  -> List a
-  -> List a
+filter :: (a -> Bool) -> List a -> List a
 filter f l = foldRight (\i acc -> if f i then i:.acc else acc) Nil l
 
 -- | Append two lists to a new list.
@@ -299,8 +291,8 @@ lengthGT4 l = length l > 4
 --
 -- prop> \x -> let types = x :: Int in reverse (x :. Nil) == x :. Nil
 reverse :: List a -> List a
-reverse =
-  error "todo: Course.List#reverse"
+reverse l = foldLeft (\i acc -> acc:.i) Nil l
+  -- error "todo: Course.List#reverse"
 
 -- | Produce an infinite `List` that seeds with the given value at its head,
 -- then runs the given function for subsequent elements
