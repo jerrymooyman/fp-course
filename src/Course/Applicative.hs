@@ -128,8 +128,7 @@ instance Applicative ((->) t) where
 --
 -- >>> lift2 (+) length sum (listh [4,5,6])
 -- 18
-lift2 ::
-  Applicative f => (a -> b -> c) -> f a -> f b -> f c
+lift2 :: Applicative f => (a -> b -> c) -> f a -> f b -> f c
 lift2 abc fa fb = abc <$> fa <*> fb
 -- lift2 =
 --   error "todo: Course.Applicative#lift2"
@@ -157,13 +156,7 @@ lift2 abc fa fb = abc <$> fa <*> fb
 --
 -- >>> lift3 (\a b c -> a + b + c) length sum product (listh [4,5,6])
 -- 138
-lift3 ::
-  Applicative f =>
-  (a -> b -> c -> d)
-  -> f a
-  -> f b
-  -> f c
-  -> f d
+lift3 :: Applicative f => (a -> b -> c -> d) -> f a -> f b -> f c -> f d
 lift3 f fa fb fc = lift2 f fa fb <*> fc
 -- lift3 f fa fb fc = f <$> fa <*> fb <*> fc
   -- error "todo: Course.Applicative#lift3"
@@ -191,22 +184,12 @@ lift3 f fa fb fc = lift2 f fa fb <*> fc
 --
 -- >>> lift4 (\a b c d -> a + b + c + d) length sum product (sum . filter even) (listh [4,5,6])
 -- 148
-lift4 ::
-  Applicative f =>
-  (a -> b -> c -> d -> e)
-  -> f a
-  -> f b
-  -> f c
-  -> f d
-  -> f e
+lift4 :: Applicative f => (a -> b -> c -> d -> e) -> f a -> f b -> f c -> f d -> f e
 lift4 f fa fb fc fd = lift3 f fa fb fc <*> fd
   -- error "todo: Course.Applicative#lift4"
 
 -- | Apply a nullary function in the environment.
-lift0 ::
-  Applicative f =>
-  a
-  -> f a
+lift0 :: Applicative f => a -> f a
 lift0 a = pure a
   -- error "todo: Course.Applicative#lift0"
 
@@ -221,11 +204,7 @@ lift0 a = pure a
 --
 -- >>> lift1 (+1) (1 :. 2 :. 3 :. Nil)
 -- [2,3,4]
-lift1 ::
-  Applicative f =>
-  (a -> b)
-  -> f a
-  -> f b
+lift1 :: Applicative f => (a -> b) -> f a -> f b
 lift1 f fa = f <$> fa
   -- error "todo: Course.Applicative#lift1"
 
@@ -247,11 +226,7 @@ lift1 f fa = f <$> fa
 -- prop> \a b c x y z -> (a :. b :. c :. Nil) *> (x :. y :. z :. Nil) == (x :. y :. z :. x :. y :. z :. x :. y :. z :. Nil)
 --
 -- prop> \x y -> Full x *> Full y == Full y
-(*>) ::
-  Applicative f =>
-  f a
-  -> f b
-  -> f b
+(*>) :: Applicative f => f a -> f b -> f b
 (*>) fa fb = seq <$> fa <*> fb
   -- error "todo: Course.Applicative#(*>)"
 
@@ -273,11 +248,7 @@ lift1 f fa = f <$> fa
 -- prop> \x y z a b c -> (x :. y :. z :. Nil) <* (a :. b :. c :. Nil) == (x :. x :. x :. y :. y :. y :. z :. z :. z :. Nil)
 --
 -- prop> \x y -> Full x <* Full y == Full x
-(<*) ::
-  Applicative f =>
-  f b
-  -> f a
-  -> f b
+(<*) :: Applicative f => f b -> f a -> f b
 (<*) fb fa = const <$> fb <*> fa
   -- error "todo: Course.Applicative#(<*)"
 
@@ -320,7 +291,7 @@ sequence l = foldRight (\fa lfa  -> lift2 (:.) fa lfa) (pure Nil) l
 -- ["aaa","aab","aac","aba","abb","abc","aca","acb","acc","baa","bab","bac","bba","bbb","bbc","bca","bcb","bcc","caa","cab","cac","cba","cbb","cbc","cca","ccb","ccc"]
 replicateA ::
   Applicative f => Int -> f a -> f (List a)
-replicateA i fa fla = _
+replicateA i fa = sequence (replicate i fa) 
   -- error "todo: Course.Applicative#replicateA"
 
 -- | Filter a list with a predicate that produces an effect.
@@ -343,13 +314,10 @@ replicateA i fa fla = _
 -- >>> filtering (const $ True :. True :.  Nil) (1 :. 2 :. 3 :. Nil)
 -- [[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3]]
 --
-filtering ::
-  Applicative f =>
-  (a -> f Bool)
-  -> List a
-  -> f (List a)
-filtering =
-  error "todo: Course.Applicative#filtering"
+filtering :: Applicative f => (a -> f Bool) -> List a -> f (List a)
+filtering af la = foldRight (\i -> lift2 (\j -> if j then (i:.) else id) (af i)) (pure Nil) la
+-- filtering =
+--   error "todo: Course.Applicative#filtering"
 
 -----------------------
 -- SUPPORT LIBRARIES --
