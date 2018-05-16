@@ -81,50 +81,62 @@ the contents of c
 
 -- Given the file name, and file contents, print them.
 -- Use @putStrLn@.
-printFile ::
-  FilePath
-  -> Chars
-  -> IO ()
-printFile =
-  error "todo: Course.FileIO#printFile"
+printFile :: FilePath -> Chars -> IO ()
+printFile p c = do
+  putStrLn p
+  putStrLn c
+  return ()
+  -- error "todo: Course.FileIO#printFile"
 
 -- Given a list of (file name and file contents), print each.
 -- Use @printFile@.
-printFiles ::
-  List (FilePath, Chars)
-  -> IO ()
-printFiles =
-  error "todo: Course.FileIO#printFiles"
+printFiles :: List (FilePath, Chars) -> IO ()
+printFiles Nil = return ()
+printFiles (x:.xs) = 
+  let (p, c) = x in
+    do
+        printFile p c 
+        printFiles xs
+        return ()
+  -- error "todo: Course.FileIO#printFiles"
 
 -- Given a file name, return (file name and file contents).
 -- Use @readFile@.
-getFile ::
-  FilePath
-  -> IO (FilePath, Chars)
-getFile =
-  error "todo: Course.FileIO#getFile"
+getFile :: FilePath -> IO (FilePath, Chars)
+getFile p = do
+  c <- readFile p
+  return (p, c)
+  -- error "todo: Course.FileIO#getFile"
 
 -- Given a list of file names, return list of (file name and file contents).
 -- Use @getFile@.
-getFiles ::
-  List FilePath
-  -> IO (List (FilePath, Chars))
-getFiles =
-  error "todo: Course.FileIO#getFiles"
+getFiles :: List FilePath -> IO (List (FilePath, Chars))
+getFiles Nil = return (Nil)
+getFiles (x:.xs) = do
+  getFiles xs >>= (\a -> (getFile x) >>= (\b -> return (b:.a)))
+
+  -- let y = (foldLeft(\a c -> ((getFile c)) ++ a) Nil l)
+  -- return (y)
+  -- error "todo: Course.FileIO#getFiles"
 
 -- Given a file name, read it and for each line in that file, read and print contents of each.
--- Use @getFiles@ and @printFiles@.
-run ::
-  FilePath
-  -> IO ()
-run =
-  error "todo: Course.FileIO#run"
+-- Use @getFiles@ and @printFiles@.a
+run :: FilePath -> IO ()
+run p = do
+  (_, c) <- getFile p -- get initial file contents
+  a <- getFiles $ lines c  -- get contents from files listed in initial file
+  printFiles a
+  -- error "todo: Course.FileIO#run"
 
 -- /Tip:/ use @getArgs@ and @run@
-main ::
-  IO ()
-main =
-  error "todo: Course.FileIO#main"
+main :: IO ()
+main = do
+  a <- getArgs
+  case a of
+    f:.Nil -> run f
+    _ -> putStrLn "usage: runhaskell io.hs filename"
+
+  -- error "todo: Course.FileIO#main"
 
 ----
 
