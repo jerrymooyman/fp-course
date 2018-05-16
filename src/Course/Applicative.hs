@@ -42,7 +42,6 @@ infixl 4 <*>
 instance Applicative ExactlyOne where
   pure :: a -> ExactlyOne a
   pure a = ExactlyOne a
-    -- error "todo: Course.Applicative pure#instance ExactlyOne"
   (<*>) :: ExactlyOne (a -> b) -> ExactlyOne a -> ExactlyOne b
   (<*>) (ExactlyOne ab) (ExactlyOne a) = ExactlyOne (ab a)
     -- error "todo: Course.Applicative (<*>)#instance ExactlyOne"
