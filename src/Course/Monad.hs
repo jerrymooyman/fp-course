@@ -60,6 +60,10 @@ instance Monad ((->) t) where
   (=<<) :: (a -> (t -> b)) -> (t -> a) -> (t -> b)
   (=<<) atb ta = \a -> atb (ta a) a
 
+
+
+--  (=<<) atb ta = \a -> atb (ta a) a
+
 -- | Witness that all things with (=<<) and (<$>) also have (<*>).
 --
 -- >>> ExactlyOne (+10) <**> ExactlyOne 8
@@ -94,6 +98,9 @@ instance Monad ((->) t) where
 (<**>) ::
   Monad f => f (a -> b) -> f a -> f b
 (<**>) fab fa = fab <*> fa
+
+
+-- (<**>) fab fa = fab <*> fa
   -- error "todo: Course.Monad#(<**>)"
 
 infixl 4 <**>
@@ -112,7 +119,16 @@ infixl 4 <**>
 -- >>> join (+) 7
 -- 14
 join :: Monad f => f (f a) -> f a
-join ffa = (=<<) id ffa 
+join ffa = -- (=<<) id _
+  error ""  
+
+
+
+
+
+
+
+--join ffa = (=<<) id ffa 
   -- error "todo: Course.Monad#join"
 
 -- | Implement a flipped version of @(=<<)@, however, use only
